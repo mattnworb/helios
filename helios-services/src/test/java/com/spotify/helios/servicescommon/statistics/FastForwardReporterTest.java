@@ -36,6 +36,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Set;
@@ -50,6 +52,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 
 public class FastForwardReporterTest {
+
+  private static final Logger log = LoggerFactory.getLogger(FastForwardReporterTest.class);
+
 
   private static final int REPORTING_INTERVAL_MILLIS = 10;
   private static final int VERIFY_TIMEOUT = REPORTING_INTERVAL_MILLIS * 2;
@@ -91,6 +96,8 @@ public class FastForwardReporterTest {
     return new CustomTypeSafeMatcher<Metric>(description) {
       @Override
       protected boolean matchesSafely(final Metric item) {
+        log.info("testing that metric with attributes={} contains expected={}",
+                 item.getAttributes(), attributes);
         return item.getAttributes().entrySet().containsAll(attributes.entrySet());
       }
     };
@@ -108,6 +115,7 @@ public class FastForwardReporterTest {
     return new CustomTypeSafeMatcher<Metric>("a metric with value=" + value) {
       @Override
       protected boolean matchesSafely(final Metric item) {
+        log.info("testing that metric with value={} matches value={}", item.getValue(), value);
         return item.getValue() == value;
       }
     };
@@ -117,6 +125,7 @@ public class FastForwardReporterTest {
     return new CustomTypeSafeMatcher<Metric>("a metric with key=" + key) {
       @Override
       protected boolean matchesSafely(final Metric item) {
+        log.info("testing that metric with key={} matches expected={}", item.getKey(), key);
         return item.getKey().equals(key);
       }
     };

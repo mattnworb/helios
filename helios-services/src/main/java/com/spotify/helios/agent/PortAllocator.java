@@ -17,6 +17,7 @@
 
 package com.spotify.helios.agent;
 
+import com.spotify.helios.common.descriptors.JobId;
 import com.spotify.helios.common.descriptors.PortMapping;
 
 import java.util.Map;
@@ -27,11 +28,11 @@ public interface PortAllocator {
   /**
    * Allocate ports for port mappings with no external ports configured.
    *
+   * @param jobId ID of the job whose ports need allocating.
    * @param ports A mutable map of port mappings for a container, both with statically configured
    *              external ports and dynamic unconfigured external ports.
    * @param used  A mutable set of used ports. The ports allocated will not clash with these ports.
    * @return The allocated ports.
    */
-  Map<String, Integer> allocate(Map<String, PortMapping> ports,
-                                Set<Integer> used);
+  Map<String, Integer> allocate(JobId jobId, Map<String, PortMapping> ports, Set<Integer> used);
 }

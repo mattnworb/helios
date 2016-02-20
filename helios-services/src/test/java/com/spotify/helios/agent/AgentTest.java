@@ -135,9 +135,9 @@ public class AgentTest {
     executions = PersistentAtomicReference.create(executionsFile,
                                                   new TypeReference<Map<JobId, Execution>>() {},
                                                   Suppliers.ofInstance(EMPTY_EXECUTIONS));
-    when(portAllocator.allocate(eq(FOO_JOB.getPorts()), anySet()))
+    when(portAllocator.allocate(eq(FOO_JOB.getId()), eq(FOO_JOB.getPorts()), anySet()))
         .thenReturn(FOO_PORT_ALLOCATION);
-    when(portAllocator.allocate(eq(BAR_JOB.getPorts()), anySet()))
+    when(portAllocator.allocate(eq(BAR_JOB.getId()), eq(BAR_JOB.getPorts()), anySet()))
         .thenReturn(BAR_PORT_ALLOCATION);
     when(supervisorFactory.create(eq(FOO_JOB), anyString(),
                                   anyMapOf(String.class, Integer.class),
@@ -238,7 +238,7 @@ public class AgentTest {
 
     startAgent();
 
-    verify(portAllocator, never()).allocate(anyMap(), anySet());
+    verify(portAllocator, never()).allocate(any(JobId.class), anyMap(), anySet());
 
     verify(supervisorFactory).create(eq(BAR_JOB), eq(barContainerId),
                                      eq(EMPTY_PORT_ALLOCATION),
@@ -283,7 +283,7 @@ public class AgentTest {
     startAgent();
 
     // Verify that the undesired supervisor was created
-    verify(portAllocator, never()).allocate(anyMap(), anySet());
+    verify(portAllocator, never()).allocate(any(JobId.class), anyMap(), anySet());
     verify(supervisorFactory).create(eq(FOO_JOB), anyString(),
                                      eq(EMPTY_PORT_ALLOCATION), any(Supervisor.Listener.class));
 
@@ -305,7 +305,7 @@ public class AgentTest {
     startAgent();
 
     start(FOO_JOB);
-    verify(portAllocator).allocate(FOO_JOB.getPorts(), EMPTY_PORT_SET);
+    verify(portAllocator).allocate(FOO_JOB.getId(), FOO_JOB.getPorts(), EMPTY_PORT_SET);
     verify(supervisorFactory).create(eq(FOO_JOB), anyString(),
                                      eq(FOO_PORT_ALLOCATION),
                                      any(Supervisor.Listener.class));
@@ -314,7 +314,7 @@ public class AgentTest {
     when(fooSupervisor.isStarting()).thenReturn(true);
 
     start(BAR_JOB);
-    verify(portAllocator).allocate(BAR_JOB.getPorts(), FOO_PORT_SET);
+    verify(portAllocator).allocate(BAR_JOB.getId(), BAR_JOB.getPorts(), FOO_PORT_SET);
     verify(supervisorFactory).create(eq(BAR_JOB), anyString(),
                                      eq(EMPTY_PORT_ALLOCATION),
                                      any(Supervisor.Listener.class));
@@ -333,7 +333,7 @@ public class AgentTest {
 
     // Verify that supervisor is started
     start(FOO_JOB);
-    verify(portAllocator).allocate(FOO_JOB.getPorts(), EMPTY_PORT_SET);
+    verify(portAllocator).allocate(FOO_JOB.getId(), FOO_JOB.getPorts(), EMPTY_PORT_SET);
     verify(fooSupervisor).setGoal(START);
     when(fooSupervisor.isDone()).thenReturn(true);
     when(fooSupervisor.isStopping()).thenReturn(false);
@@ -354,7 +354,7 @@ public class AgentTest {
 
     // Verify that a new supervisor is created after the previous one is discarded
     start(FOO_JOB);
-    verify(portAllocator, times(2)).allocate(FOO_JOB.getPorts(), EMPTY_PORT_SET);
+    verify(portAllocator, times(2)).allocate(FOO_JOB.getId(), FOO_JOB.getPorts(), EMPTY_PORT_SET);
     verify(supervisorFactory, times(2)).create(eq(FOO_JOB), anyString(),
                                                eq(FOO_PORT_ALLOCATION),
                                                any(Supervisor.Listener.class));

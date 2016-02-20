@@ -20,6 +20,7 @@ package com.spotify.helios.agent;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 
+import com.spotify.helios.common.descriptors.JobId;
 import com.spotify.helios.common.descriptors.PortMapping;
 
 import org.slf4j.Logger;
@@ -34,9 +35,9 @@ import java.util.Set;
  * A simple port allocator. Given a port range and a set of used ports it will linearly search
  * through the port range until it finds an available port and claim it.
  *
- * The index into the port range is kept between calls to {@link #allocate(Map, Set)}. Successive
- * allocations will not reuse an available port until the port range has been exhausted and the
- * index wraps around from the start of the port range.
+ * The index into the port range is kept between calls to {@link #allocate(JobId, Map, Set)}.
+ * Successive allocations will not reuse an available port until the port range has been exhausted
+ * and the index wraps around from the start of the port range.
  */
 public class SimplePortAllocator implements PortAllocator {
 
@@ -57,7 +58,7 @@ public class SimplePortAllocator implements PortAllocator {
   }
 
   @Override
-  public Map<String, Integer> allocate(final Map<String, PortMapping> ports,
+  public Map<String, Integer> allocate(final JobId jobId, final Map<String, PortMapping> ports,
                                        final Set<Integer> used) {
     return allocate0(ports, Sets.newHashSet(used));
   }

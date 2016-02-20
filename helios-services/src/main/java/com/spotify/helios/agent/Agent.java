@@ -248,7 +248,7 @@ public class Agent extends AbstractIdleService {
           final JobId jobId = entry.getKey();
           final Execution execution = entry.getValue();
           final Job job = execution.getJob();
-          final Map<String, Integer> ports = portAllocator.allocate(job.getPorts(),
+          final Map<String, Integer> ports = portAllocator.allocate(jobId, job.getPorts(),
                                                                     usedPorts.build());
           log.debug("Allocated ports for job {}: {}", jobId, ports);
           if (ports != null) {

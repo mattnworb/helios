@@ -20,6 +20,7 @@ package com.spotify.helios.agent;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import com.spotify.helios.common.descriptors.JobId;
 import com.spotify.helios.common.descriptors.PortMapping;
 
 import org.junit.Test;
@@ -37,13 +38,15 @@ import static org.junit.Assert.assertThat;
 
 public class PortAllocatorTest {
 
+  private final JobId jobId = new JobId("empty", "0");
+
   @Test
   public void testAllocate() throws Exception {
     final PortAllocator sut = new SimplePortAllocator(20000, 20010);
     final Map<String, PortMapping> mapping = ImmutableMap.of("p1", PortMapping.of(17),
                                                              "p2", PortMapping.of(18, 18));
     final Set<Integer> used = ImmutableSet.of(10, 11);
-    final Map<String, Integer> allocation = sut.allocate(mapping, used);
+    final Map<String, Integer> allocation = sut.allocate(jobId, mapping, used);
     assertThat(allocation, hasEntry(is("p1"),
                                     allOf(greaterThanOrEqualTo(20000), lessThanOrEqualTo(20010))));
     assertThat(allocation, hasEntry("p2", 18));
@@ -55,7 +58,7 @@ public class PortAllocatorTest {
     final Map<String, PortMapping> mapping = ImmutableMap.of("p1", PortMapping.of(17),
                                                              "p2", PortMapping.of(18, 18));
     final Set<Integer> used = ImmutableSet.of(10, 11);
-    final Map<String, Integer> allocation = sut.allocate(mapping, used);
+    final Map<String, Integer> allocation = sut.allocate(jobId, mapping, used);
     assertNull(allocation);
   }
 
@@ -67,7 +70,7 @@ public class PortAllocatorTest {
                                                              "p3", PortMapping.of(4),
                                                              "p4", PortMapping.of(18, 18));
     final Set<Integer> used = ImmutableSet.of();
-    final Map<String, Integer> allocation = sut.allocate(mapping, used);
+    final Map<String, Integer> allocation = sut.allocate(jobId, mapping, used);
     assertNull(allocation);
   }
 }

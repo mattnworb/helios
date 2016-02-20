@@ -36,7 +36,7 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-public class PortAllocatorTest {
+public class SimplePortAllocatorTest {
 
   private final JobId jobId = new JobId("empty", "0");
 

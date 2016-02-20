@@ -39,7 +39,7 @@ public class PortAllocatorTest {
 
   @Test
   public void testAllocate() throws Exception {
-    final PortAllocator sut = new PortAllocator(20000, 20010);
+    final PortAllocator sut = new SimplePortAllocator(20000, 20010);
     final Map<String, PortMapping> mapping = ImmutableMap.of("p1", PortMapping.of(17),
                                                              "p2", PortMapping.of(18, 18));
     final Set<Integer> used = ImmutableSet.of(10, 11);
@@ -51,7 +51,7 @@ public class PortAllocatorTest {
 
   @Test
   public void testInsufficientPortsFail1() throws Exception {
-    final PortAllocator sut = new PortAllocator(10, 11);
+    final PortAllocator sut = new SimplePortAllocator(10, 11);
     final Map<String, PortMapping> mapping = ImmutableMap.of("p1", PortMapping.of(17),
                                                              "p2", PortMapping.of(18, 18));
     final Set<Integer> used = ImmutableSet.of(10, 11);
@@ -61,7 +61,7 @@ public class PortAllocatorTest {
 
   @Test
   public void testInsufficientPortsFail2() throws Exception {
-    final PortAllocator sut = new PortAllocator(10, 11);
+    final PortAllocator sut = new SimplePortAllocator(10, 11);
     final Map<String, PortMapping> mapping = ImmutableMap.of("p1", PortMapping.of(1),
                                                              "p2", PortMapping.of(2),
                                                              "p3", PortMapping.of(4),

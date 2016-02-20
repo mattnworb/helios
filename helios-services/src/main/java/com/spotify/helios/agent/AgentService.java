@@ -299,8 +299,8 @@ public class AgentService extends AbstractIdleService implements Managed {
 
     final ReactorFactory reactorFactory = new ReactorFactory();
 
-    final PortAllocator portAllocator = new PortAllocator(config.getPortRangeStart(),
-                                                          config.getPortRangeEnd());
+    final PortAllocator portAllocator = new SimplePortAllocator(config.getPortRangeStart(),
+                                                                config.getPortRangeEnd());
 
     final PersistentAtomicReference<Map<JobId, Execution>> executions;
     try {
